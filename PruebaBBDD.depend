@@ -1,0 +1,183 @@
+# depslib dependency file v1.0
+1515091426 source:/home/aperez/Desktop/PruebaBBDD/main.cpp
+	<iostream>
+	<mysql_connection.h>
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<vector>
+	<pugixml.hpp>
+	<pugixml.hpp>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/mysql_connection.h
+	<cppconn/connection.h>
+	<boost/shared_ptr.hpp>
+	<boost/scoped_ptr.hpp>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/connection.h
+	<map>
+	"build_config.h"
+	"warning.h"
+	"sqlstring.h"
+	"variant.h"
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/build_config.h
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/warning.h
+	<stdexcept>
+	<string>
+	<memory>
+	"sqlstring.h"
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/sqlstring.h
+	<string>
+	<algorithm>
+	"build_config.h"
+	<iostream>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/variant.h
+	<string>
+	<map>
+	<list>
+	<algorithm>
+	<typeinfo>
+	"build_config.h"
+	"sqlstring.h"
+	"exception.h"
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/exception.h
+	"build_config.h"
+	<stdexcept>
+	<string>
+	<memory>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/driver.h
+	"connection.h"
+	"build_config.h"
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/resultset.h
+	"config.h"
+	<list>
+	<map>
+	<iostream>
+	"sqlstring.h"
+	"resultset_metadata.h"
+
+1494434058 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/config.h
+	<stdint.h>
+	<inttypes.h>
+	<stdint.h>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/resultset_metadata.h
+	"sqlstring.h"
+	"datatype.h"
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/datatype.h
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/statement.h
+	"config.h"
+	"resultset.h"
+	<string>
+
+1494432899 /home/aperez/Desktop/PruebaBBDD/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/prepared_statement.h
+	<iostream>
+	"statement.h"
+
+1515117387 source:/home/ubuntuserver/Desktop/Servidor/main.cpp
+	<iostream>
+	<mysql_connection.h>
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<vector>
+	<pugixml.hpp>
+	<pugixml.hpp>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/mysql_connection.h
+	<cppconn/connection.h>
+	<boost/shared_ptr.hpp>
+	<boost/scoped_ptr.hpp>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/connection.h
+	<map>
+	"build_config.h"
+	"warning.h"
+	"sqlstring.h"
+	"variant.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/build_config.h
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/warning.h
+	<stdexcept>
+	<string>
+	<memory>
+	"sqlstring.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/sqlstring.h
+	<string>
+	<algorithm>
+	"build_config.h"
+	<iostream>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/variant.h
+	<string>
+	<map>
+	<list>
+	<algorithm>
+	<typeinfo>
+	"build_config.h"
+	"sqlstring.h"
+	"exception.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/exception.h
+	"build_config.h"
+	<stdexcept>
+	<string>
+	<memory>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/driver.h
+	"connection.h"
+	"build_config.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/resultset.h
+	"config.h"
+	<list>
+	<map>
+	<iostream>
+	"sqlstring.h"
+	"resultset_metadata.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/config.h
+	<stdint.h>
+	<inttypes.h>
+	<stdint.h>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/resultset_metadata.h
+	"sqlstring.h"
+	"datatype.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/datatype.h
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/statement.h
+	"config.h"
+	"resultset.h"
+	<string>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/cppconn/prepared_statement.h
+	<iostream>
+	"statement.h"
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/pugixml-1.8/src/pugixml.hpp
+	"pugiconfig.hpp"
+	<stddef.h>
+	<exception>
+	<iterator>
+	<iosfwd>
+	<string>
+
+1515117387 /home/ubuntuserver/Desktop/Servidor/pugixml-1.8/src/pugiconfig.hpp
+
