@@ -58,7 +58,7 @@ sDataReceived;
 std::vector<string> sNameRaces;
 
 bool
-bVerified = false,
+bPasswordVerified = false,
 bPlayerCreated = false,
 bRepeatPassword = false,
 bRaceCreated = false,
@@ -78,6 +78,7 @@ void gameloop()
         con->setSchema(DATABASE);
         sql::Statement* stmt = con->createStatement();
 
+
         //El proceso esperara la recepcion del usuario
         sf::Socket::Status status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
         sUserNick = cBufferSocket;
@@ -93,14 +94,14 @@ void gameloop()
             cBufferSocket[1] = '\0';
 
             //Informamos que el usuario es correcto
-            status = socket.send(cBufferSocket, sizeof(cBufferSocket) + 1);
+            status = socket.send(cBufferSocket, sizeof(cBufferSocket));
 
             //Esperamos respuesta de la contraseña
             status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
             sUserPass = cBufferSocket;
 
             //Liberamos resultset anterior
-            delete(res);
+            //delete(res);
 
             //Comprobamos si existe usuario con dichos datos
             sql::ResultSet* res = stmt->executeQuery("SELECT count(*) FROM Jugadores WHERE Nombre = '" + sUserNick + "' AND Pass = '" + sUserPass + "'");
@@ -108,12 +109,47 @@ void gameloop()
             if(res->next() && res->getInt(1) == 1) //Existe usuario con contraseña
             {
 
-            std::cout << "Existe usuario con contraseña!" << std::endl;
-            while(true);
+                //Existe usuario
+                cBufferSocket[0] = '0';
+                cBufferSocket[1] = '\0';
+
+                //Informamos que el usuario con contraseña es correcto
+                status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+
+
             }
+            else //No existe usuario con contraseña
+            {
 
+                while(!bPasswordVerified)//Mientras no la escriba bien repetiremos
+                {
 
+                    cBufferSocket[0] = '1';
+                    cBufferSocket[1] = '\0';
 
+                    //Informamos que el usuario con contraseña es incorrecto
+                    status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+
+                    //Esperamos respuesta de la contraseña
+                    status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                    sUserPass = cBufferSocket;
+
+                    //Liberamos resultset anterior
+                    //delete(res);
+
+                    //Comprobamos si existe usuario con dichos datos
+                    sql::ResultSet* res = stmt->executeQuery("SELECT count(*) FROM Jugadores WHERE Nombre = '" + sUserNick + "' AND Pass = '" + sUserPass + "'");
+                    if(res->next() && res->getInt(1) == 1) //Existe usuario con contraseña
+                    {
+                        cBufferSocket[0] = '0';
+                        cBufferSocket[1] = '\0';
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                        bPasswordVerified = true;
+                    }
+
+                }
+
+            }
 
         }
 
@@ -126,7 +162,7 @@ void gameloop()
     catch(sql::SQLException &e)
     {
 
-        std::cout << "Ha petao con el error " << e.getErrorCode() << std::endl;
+        std::cout << "Error: " << e.getErrorCode() << std::endl;
 
     }
 }
