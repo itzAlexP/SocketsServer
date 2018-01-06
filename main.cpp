@@ -65,7 +65,8 @@ bRepeatPassword = false,
 bNewUserVerified = false,
 bRaceCreated = false,
 bCharacterCreated = false,
-bCloseServer = false;
+bCloseServer = false,
+bCharacterNameVerified = false;
 
 
 
@@ -271,6 +272,41 @@ void gameloop()
                 status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
                 sCharacterName = cBufferSocket;
 
+                //Comprobamos si el nombre esta libre
+                res = stmt->executeQuery("SELECT count(*) FROM Personajes, Jugadores, Razas WHERE Personajes.IDJugador = Jugadores.JugadorID AND Personajes.IDRaza = Razas.RazaID AND Personajes.Nombre = '" + sCharacterName + "'");
+
+                if(res->next() && res->getInt(1) == 1) //Nombre Ocupado
+                {
+
+                    //Volvemos a pedir usuario
+                    while(!bCharacterNameVerified)
+                    {
+                        cBufferSocket[0] = '1';
+                        cBufferSocket[1] = '\0';
+
+                        //Informamos que el nombre ya existe
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+
+                        //Esperamos respuesta de nuevo nombre
+                        status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                        sCharacterName = cBufferSocket;
+
+                        //Liberamos resultset anterior
+                        //delete(res);
+
+                        //Comprobamos si existe usuario con dichos datos
+                        res = stmt->executeQuery("SELECT count(*) FROM Personajes, Jugadores, Razas WHERE Personajes.IDJugador = Jugadores.JugadorID AND Personajes.IDRaza = Razas.RazaID AND Personajes.Nombre = '" + sCharacterName + "'");
+                        if(res->next() && res->getInt(1) != 1) //No existe usuario
+                        {
+                            cBufferSocket[0] = '0';
+                            cBufferSocket[1] = '\0';
+
+                            status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                            bCharacterNameVerified = true;
+                        }
+                    }
+                }
+
                 //Obtenemos id del jugador para realizar el insert
                 res = stmt->executeQuery("SELECT JugadorId FROM Jugadores WHERE Nombre = '"+sUserNick+"'");
                 while(res->next())
@@ -289,7 +325,7 @@ void gameloop()
                 }
 
                 //Realizamos insert del personaje
-                 stmt->execute("INSERT INTO Personajes(Nombre, IDJugador, IDRaza) VALUES ('"+sCharacterName+"', "+ std::to_string(iIdJugador) +", "+ std::to_string(iIdRaza) +")");
+                stmt->execute("INSERT INTO Personajes(Nombre, IDJugador, IDRaza) VALUES ('"+sCharacterName+"', "+ std::to_string(iIdJugador) +", "+ std::to_string(iIdRaza) +")");
             }
         }
 
