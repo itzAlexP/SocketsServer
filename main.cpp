@@ -53,7 +53,8 @@ sCharacterName,
 sPlayerPosition,
 sPlayerSelection,
 sCharacterSelected,
-sDataReceived;
+sDataReceived,
+sDataSender;
 
 std::vector<string> sNameRaces;
 
@@ -207,12 +208,14 @@ void gameloop()
                             bNewUserVerified = true;
                         }
                     }
-                }else{
+                }
+                else
+                {
 
-                        //Informamos al servidor que el nombre esta libre
-                        cBufferSocket[0] = '0';
-                        cBufferSocket[1] = '\0';
-                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                    //Informamos al servidor que el nombre esta libre
+                    cBufferSocket[0] = '0';
+                    cBufferSocket[1] = '\0';
+                    status = socket.send(cBufferSocket, sizeof(cBufferSocket));
                 }
 
                 while(!bRepeatPassword)
@@ -243,6 +246,50 @@ void gameloop()
                         status = socket.send(cBufferSocket, sizeof(cBufferSocket));
                     }
                 }
+
+                //Obtenemos las razas de la base de datos y las enviamos al jugador
+                while(!bRaceCreated)
+                {
+
+                    res = stmt->executeQuery("SELECT Nombre, Descripcion FROM Razas");
+                    while(res->next())
+                    {
+                        sNameRaces.push_back(res->getString("Nombre"));
+                        sDataSender = sDataSender + res->getString("Nombre") + "-" + res->getString("Descripcion") + "-";
+                        bRaceCreated = true;
+                    }
+
+                }
+
+                status = socket.send(sDataSender.c_str(), 2000);
+
+                //Esperamos raza del jugador
+                status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                sUserRaces = cBufferSocket;
+
+                //Esperamos nombre del personaje
+                status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                sCharacterName = cBufferSocket;
+
+                //Obtenemos id del jugador para realizar el insert
+                res = stmt->executeQuery("SELECT JugadorId FROM Jugadores WHERE Nombre = '"+sUserNick+"'");
+                while(res->next())
+                {
+
+                    iIdJugador = res->getInt("JugadorID");
+                }
+
+
+                //Obtenemos id de la raza
+                res = stmt->executeQuery("SELECT RazaId FROM Razas WHERE Nombre = '"+sUserRaces+"'");
+                while(res->next())
+                {
+
+                    iIdRaza = res->getInt("RazaID");
+                }
+
+                //Realizamos insert del personaje
+                 stmt->execute("INSERT INTO Personajes(Nombre, IDJugador, IDRaza) VALUES ('"+sCharacterName+"', "+ std::to_string(iIdJugador) +", "+ std::to_string(iIdRaza) +")");
             }
         }
 
