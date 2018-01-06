@@ -61,6 +61,7 @@ bool
 bPasswordVerified = false,
 bPlayerCreated = false,
 bRepeatPassword = false,
+bNewUserVerified = false,
 bRaceCreated = false,
 bCharacterCreated = false,
 bCloseServer = false;
@@ -86,7 +87,7 @@ void gameloop()
         //Comprobamos si existe el nick del jugador
         sql::ResultSet* res = stmt->executeQuery("SELECT count(*) FROM Jugadores WHERE Nombre = '" + sUserNick + "'");
 
-        if(res->next() && res->getInt(1) == 1)
+        if(res->next() && res->getInt(1) == 1) //Existe usuario
         {
 
             //Existe usuario
@@ -151,6 +152,98 @@ void gameloop()
 
             }
 
+        }
+        else //No existe el usuario
+        {
+            while(!bPlayerCreated)//Mientras no este el jugador creado repetiremos
+            {
+
+                //No existe usuario
+                cBufferSocket[0] = '2';
+                cBufferSocket[1] = '\0';
+
+                //Informamos que el usuario no existe
+                status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+
+
+                //Recibimos nombre de usuario
+                status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+
+                sUserNick = cBufferSocket;
+
+                //Liberamos resultset anterior
+                //delete(res);
+
+                //Comprobamos si el nick esta libre
+                sql::ResultSet* res = stmt->executeQuery("SELECT count(*) FROM Jugadores WHERE Nombre = '" + sUserNick + "'");
+
+                if(res->next() && res->getInt(1) == 1) //Existe usuario
+                {
+
+                    //Volvemos a pedir usuario
+                    while(!bNewUserVerified)
+                    {
+                        cBufferSocket[0] = '1';
+                        cBufferSocket[1] = '\0';
+
+                        //Informamos que el usuario ya existe
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+
+                        //Esperamos respuesta de nuevo nombre de usuario
+                        status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                        sUserNick = cBufferSocket;
+
+                        //Liberamos resultset anterior
+                        //delete(res);
+
+                        //Comprobamos si existe usuario con dichos datos
+                        sql::ResultSet* res = stmt->executeQuery("SELECT count(*) FROM Jugadores WHERE Nombre = '" + sUserNick + "'");
+                        if(res->next() && res->getInt(1) != 1) //No existe usuario
+                        {
+                            cBufferSocket[0] = '0';
+                            cBufferSocket[1] = '\0';
+
+                            status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                            bNewUserVerified = true;
+                        }
+                    }
+                }else{
+
+                        //Informamos al servidor que el nombre esta libre
+                        cBufferSocket[0] = '0';
+                        cBufferSocket[1] = '\0';
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                }
+
+                while(!bRepeatPassword)
+                {
+
+
+                    status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                    sUserPass = cBufferSocket;
+
+                    status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+                    sUserPassRepeat = cBufferSocket;
+
+                    if(sUserPass == sUserPassRepeat)//Las contraseñas coinciden
+                    {
+                        cBufferSocket[0] = '0';
+                        cBufferSocket[1] = '\0';
+
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                        stmt->execute("INSERT INTO Jugadores (Nombre, Pass) VALUES ('"+ sUserNick +"', '"+ sUserPass +"')");
+                        bRepeatPassword = true;
+                        bPlayerCreated = true;
+                    }
+                    else //Las contraseñas no coinciden
+                    {
+                        cBufferSocket[0] = '1';
+                        cBufferSocket[1] = '\0';
+
+                        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+                    }
+                }
+            }
         }
 
         while(true)
