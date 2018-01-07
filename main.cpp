@@ -54,12 +54,12 @@ sPlayerPosition,
 sPlayerSelection,
 sCharacterSelected,
 sDataReceived,
-sDataSender;
+sDataSender,
+sDataSenderAux;
 
 std::vector<string>
 sNameRaces,
 sNameCharacters;
-
 
 bool
 bPasswordVerified = false,
@@ -271,7 +271,7 @@ void gameloop()
 
                 }
 
-                status = socket.send(sDataSender.c_str(), 2000);
+                status = socket.send(sDataSender.c_str(), sDataSender.size() + 1);
 
                 //Esperamos raza del jugador
                 status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
@@ -338,6 +338,7 @@ void gameloop()
             }
         }
 
+        sDataSender.clear();
 
         //Obtenemos los personajes de la base de datos y los enviamos al jugador
         while(!bCharacterSelected)
@@ -363,8 +364,8 @@ void gameloop()
 
         }
 
-        status = socket.send(sDataSender.c_str(), 2000);
 
+        status = socket.send(sDataSender.c_str(), sDataSender.size() + 1);
 
         //Esperamos respuesta del nombre
         status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
