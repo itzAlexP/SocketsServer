@@ -191,7 +191,7 @@ void ingame()
     status = socket.send(sDataSender.c_str(), sizeof(cBufferSocket));
 
     //Enviamos zonas
-    sDataSender.clear();
+    sDataSender = "";
     for(pugi::xml_node direccion = currentNode.child("conexiones"); direccion; direccion = direccion.next_sibling("conexiones")){
 
 
@@ -204,13 +204,12 @@ void ingame()
 
     //Enviamos direcciones validas
     status = socket.send(sDataSender.c_str(), sizeof(cBufferSocket));
-    std::cout << sDataSender << std::endl;
+
     //Esperamos seleccion del jugador
     status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+    sPlayerSelection = cBufferSocket;
+    currentNode = doc.child("mazmorra").find_child_by_attribute("habitacion", "id", currentNode.child("conexiones").child_value(sPlayerSelection.c_str()));
 
-    //Almacenamos la seleccion del usuario
-
-    while(true){}
 
     }
 
