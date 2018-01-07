@@ -54,7 +54,8 @@ sPlayerPosition,
 sPlayerSelection,
 sCharacterSelected,
 sDataReceived,
-sDataSender;
+sDataSender,
+sChoosedCharacter;
 
 
 std::vector<string>
@@ -132,8 +133,20 @@ void CrearPersonaje(sql::ResultSet* res, sql::Statement* stmt)
 
                 status = socket.send(cBufferSocket, sizeof(cBufferSocket));
                 bCharacterNameVerified = true;
+
             }
         }
+    }
+    else
+    {
+
+        cBufferSocket[0] = '0';
+        cBufferSocket[1] = '\0';
+
+        status = socket.send(cBufferSocket, sizeof(cBufferSocket));
+        bCharacterNameVerified = true;
+
+
     }
 
     //Obtenemos id del jugador para realizar el insert
@@ -155,8 +168,17 @@ void CrearPersonaje(sql::ResultSet* res, sql::Statement* stmt)
 
     //Realizamos insert del personaje
     stmt->execute("INSERT INTO Personajes(Nombre, IDJugador, IDRaza) VALUES ('"+sCharacterName+"', "+ std::to_string(iIdJugador) +", "+ std::to_string(iIdRaza) +")");
+    sChoosedCharacter = sCharacterName;
 
+    bCharacterSelected = true;
+}
 
+void ingame()
+{
+
+    std::cout << "Ha seleccionado a: " << sChoosedCharacter << std::endl;
+
+    while(true) {}
 
 }
 
@@ -391,14 +413,10 @@ void gameloop()
             {
 
                 bCharacterSelected = true;
+                sChoosedCharacter = cBufferSocket;
 
             }
         }
-
-
-        //Recibimos personaje seleccionado
-        std::cout << "Power Ranger" << std::endl;
-        while(true){}
 
     }
     catch(sql::SQLException &e)
@@ -452,6 +470,8 @@ int main()
                 //Para el formulario haremos que el socket se bloque esperando respuesta del cliente
                 socket.setBlocking(true);
                 gameloop();
+                std::cout << "Sali del gameloop" << std::endl;
+                ingame();
 
             }
         }
