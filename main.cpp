@@ -56,7 +56,10 @@ sCharacterSelected,
 sDataReceived,
 sDataSender;
 
-std::vector<string> sNameRaces;
+std::vector<string>
+sNameRaces,
+sNameCharacters;
+
 
 bool
 bPasswordVerified = false,
@@ -66,9 +69,15 @@ bNewUserVerified = false,
 bRaceCreated = false,
 bCharacterCreated = false,
 bCloseServer = false,
-bCharacterNameVerified = false;
+bCharacterNameVerified = false,
+bCharacterSelected = false;
+
+void CrerPersonaje(){
 
 
+
+
+}
 
 void gameloop()
 {
@@ -329,6 +338,45 @@ void gameloop()
             }
         }
 
+
+        //Obtenemos los personajes de la base de datos y los enviamos al jugador
+        while(!bCharacterSelected)
+        {
+
+
+            //Obtenemos id del jugador
+            res = stmt->executeQuery("SELECT JugadorId FROM Jugadores WHERE Nombre = '"+sUserNick+"'");
+            while(res->next())
+            {
+
+                iIdJugador = res->getInt("JugadorID");
+            }
+
+            res = stmt->executeQuery("SELECT Personajes.Nombre AS pNombre, Razas.Nombre AS rNombre FROM Personajes, Jugadores, Razas WHERE Personajes.IDJugador = Jugadores.JugadorID AND Personajes.IDRaza = Razas.RazaID AND Personajes.IDJugador = "+std::to_string(iIdJugador)+"");
+
+            while(res->next())
+            {
+                sNameCharacters.push_back(res->getString("pNombre"));
+                sDataSender = sDataSender + res->getString("pNombre") + "-";
+                bCharacterSelected = true;
+            }
+
+        }
+
+        status = socket.send(sDataSender.c_str(), 2000);
+
+
+        //Esperamos respuesta del nombre
+        status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+
+        //El jugador desea crear un nuevo personaje
+        if(cBufferSocket == "Nuevo" || cBufferSocket == "nuevo"){
+
+
+
+        }
+
+        //Recibimos personaje seleccionado
         while(true)
         {
 
