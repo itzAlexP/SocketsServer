@@ -26,6 +26,7 @@ using namespace std;
 pid_t
 pNuevoUsuario;
 
+pugi::xml_document doc;
 
 char
 cBufferSocket[100];
@@ -33,8 +34,6 @@ cBufferSocket[100];
 sf::TcpListener dispatcher;
 sf::TcpSocket socket;
 sf::Socket::Status status;
-
-pugi::xml_document doc;
 
 int
 iIdJugador,
@@ -176,9 +175,44 @@ void CrearPersonaje(sql::ResultSet* res, sql::Statement* stmt)
 void ingame()
 {
 
-    std::cout << "Ha seleccionado a: " << sChoosedCharacter << std::endl;
+    //Cargamos archivo xml
+    pugi::xml_parse_result result = doc.load_file("Mazmorra.xml");
+    pugi::xml_node currentNode = doc.child("mazmorra");
 
-    while(true) {}
+    //Nos desplazamos hasta la sala inicial
+    currentNode = currentNode.child("habitacion");
+
+
+    //Hasta que no escriba quit no paramos el juego
+    while(sPlayerSelection != "quit") {
+
+    //Enviamos descripcion
+    sDataSender = currentNode.child_value("descripcion");
+    status = socket.send(sDataSender.c_str(), sizeof(cBufferSocket));
+
+    //Enviamos zonas
+    sDataSender.clear();
+    for(pugi::xml_node direccion = currentNode.child("conexiones"); direccion; direccion = direccion.next_sibling("conexiones")){
+
+
+    if(direccion.child_value("Norte") != "")sDataSender = sDataSender + "Norte-";
+    if(direccion.child_value("Sur") != "")sDataSender = sDataSender + "Sur-";
+    if(direccion.child_value("Este") != "")sDataSender = sDataSender + "Este-";
+    if(direccion.child_value("Oeste") != "")sDataSender = sDataSender + "Oeste-";
+
+    }
+
+    //Enviamos direcciones validas
+    status = socket.send(sDataSender.c_str(), sizeof(cBufferSocket));
+    std::cout << sDataSender << std::endl;
+    //Esperamos seleccion del jugador
+    status = socket.receive(cBufferSocket, sizeof(cBufferSocket), received);
+
+    //Almacenamos la seleccion del usuario
+
+    while(true){}
+
+    }
 
 }
 
@@ -470,7 +504,6 @@ int main()
                 //Para el formulario haremos que el socket se bloque esperando respuesta del cliente
                 socket.setBlocking(true);
                 gameloop();
-                std::cout << "Sali del gameloop" << std::endl;
                 ingame();
 
             }
