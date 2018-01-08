@@ -565,7 +565,7 @@
 	<SFML/Network/Socket.hpp>
 	<vector>
 
-1515367368 source:/home/ubuntuserver/Desktop/Server/main.cpp
+1515443969 source:/home/ubuntuserver/Desktop/Server/main.cpp
 	<iostream>
 	<unistd.h>
 	<mysql_connection.h>
@@ -577,6 +577,10 @@
 	<vector>
 	<pugixml.hpp>
 	<SFML/Network.hpp>
+	<sys/types.h>
+	<sys/ipc.h>
+	<sys/shm.h>
+	<sys/sem.h>
 	<pugixml.hpp>
 
 1515347566 /home/ubuntuserver/Desktop/Server/mysql-connector-c++-1.1.9-linux-glibc2.12-x86-64bit/include/mysql_connection.h
